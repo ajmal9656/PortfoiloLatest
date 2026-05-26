@@ -22,29 +22,35 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
 
   const sendEmail = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formRef.current) return;
+  e.preventDefault();
 
-    setLoading(true);
+  if (!formRef.current) return;
 
-    emailjs.sendForm(
-  import.meta.env.VITE_EMAILJS_SERVICE_ID,
-  import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-  formRef.current,
-  import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-)
+  setLoading(true);
 
-      .then(() => {
-        toast.success("Message sent successfully");
-        formRef.current?.reset();
-      })
-      .catch(() => {
-        toast.error("Failed to send message");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  emailjs
+    .sendForm(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      formRef.current,
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+    .then((result) => {
+      console.log("SUCCESS:", result.text);
+
+      toast.success("Message sent successfully");
+
+      formRef.current?.reset();
+    })
+    .catch((error) => {
+      console.log("EMAIL ERROR:", error);
+
+      toast.error("Failed to send message");
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+};
   console.log("ENV CHECK:", {
   service: import.meta.env.VITE_EMAILJS_SERVICE_ID,
   template: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
